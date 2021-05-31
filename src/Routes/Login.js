@@ -28,7 +28,11 @@ export const Login = () => {
             setFormValidation(previousValidation => ({ ...previousValidation, usernameError: false }))
             if (users.some(user => user.password === loginData.password)) {
                 setFormValidation(previousValidation => ({ ...previousValidation, passwordError: false }))
-                history.push('/dashboard')
+                if (users.some(user => user.role === 'user')) {
+                    history.push('/dashboard')
+                } else {
+                    history.push('/atm')
+                }
             } else {
                 setFormValidation(previousValidation => ({ ...previousValidation, passwordError: true }))
             }
