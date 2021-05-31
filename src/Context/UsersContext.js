@@ -7,7 +7,8 @@ export const UsersProvider = (props) => {
     const [users, setUsers] = useState([{
         username: 'Fercho',
         password: 'Fernando',
-        employeeId: 1
+        employeeId: 1,
+        role: 'user'
     }
     ])
 
