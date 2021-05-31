@@ -1,30 +1,46 @@
-import { Button, CssBaseline, TextField, FormControlLabel, Link, Grid, Typography } from '@material-ui/core'
+import { Button, CssBaseline, TextField, FormControlLabel, Grid, Typography } from '@material-ui/core'
 import { Container, Avatar } from '@material-ui/core'
 import { LockOutlined } from '@material-ui/icons'
-import { useState } from 'react'
+import { Redirect, useHistory } from 'react-router-dom'
+import { useContext, useState } from 'react'
+import { UsersContext } from '../Context/UsersContext'
 import { useStyles } from '../Styles/LoginStyles'
 
 export const Login = () => {
     const classes = useStyles()
+    const history = useHistory()
+
+    const [users] = useContext(UsersContext)
 
     const [loginData, setLoginData] = useState({
-        email: '',
+        username: '',
         password: ''
     })
 
     const [formValidation, setFormValidation] = useState({
-        email: false,
-        password: false
+        usernameError: false,
+        passwordError: false
     })
 
     const handleLogin = (e) => {
         e.preventDefault()
+        if (users.some(user => user.username === loginData.username)) {
+            setFormValidation(previousValidation => ({ ...previousValidation, usernameError: false }))
+            if (users.some(user => user.password === loginData.password)) {
+                setFormValidation(previousValidation => ({ ...previousValidation, passwordError: false }))
+                history.push('/dashboard')
+            } else {
+                setFormValidation(previousValidation => ({ ...previousValidation, passwordError: true }))
+            }
+        } else {
+            setFormValidation(previousValidation => ({ ...previousValidation, usernameError: true }))
+        }
     }
 
     const handleLoginData = (e) => {
         const newData = e.target.value
         setLoginData({ ...loginData, [e.target.name]: newData })
-        
+
     }
 
     return (
@@ -44,14 +60,14 @@ export const Login = () => {
                             margin='normal'
                             required
                             fullWidth
-                            id='email'
-                            label='Email Address'
-                            name='email'
-                            autoComplete='email'
+                            id='username'
+                            label='User Name'
+                            name='username'
+                            autoComplete='username'
                             autoFocus
-                            value={loginData.email}
+                            value={loginData.username}
                             onChange={e => handleLoginData(e)}
-                            error={formValidation.email}
+                            error={formValidation.usernameError}
                         />
                         <TextField
                             variant='outlined'
@@ -65,7 +81,7 @@ export const Login = () => {
                             autoComplete='current-password'
                             value={loginData.password}
                             onChange={e => handleLoginData(e)}
-                            error={formValidation.password}
+                            error={formValidation.passwordError}
                         />
                         <Button
                             type='submit'
