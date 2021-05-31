@@ -4,13 +4,17 @@ import { LockOutlined } from '@material-ui/icons'
 import { Redirect, useHistory } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { UsersContext } from '../Context/UsersContext'
+import { userAuthenticated } from '../Auth/Auth'
 import { useStyles } from '../Styles/LoginStyles'
 
 export const Login = () => {
     const classes = useStyles()
     const history = useHistory()
 
-    const [users] = useContext(UsersContext)
+    const { users, clients } = useContext(UsersContext)
+
+    const [usersValue] = users
+    const [clientsValue] = clients
 
     const [loginData, setLoginData] = useState({
         username: '',
@@ -24,20 +28,13 @@ export const Login = () => {
 
     const handleLogin = (e) => {
         e.preventDefault()
-        if (users.some(user => user.username === loginData.username)) {
-            setFormValidation(previousValidation => ({ ...previousValidation, usernameError: false }))
-            if (users.some(user => user.password === loginData.password)) {
-                setFormValidation(previousValidation => ({ ...previousValidation, passwordError: false }))
-                if (users.some(user => user.role === 'user')) {
-                    history.push('/dashboard')
-                } else {
-                    history.push('/atm')
-                }
-            } else {
-                setFormValidation(previousValidation => ({ ...previousValidation, passwordError: true }))
-            }
+        //Checks for user/client existence
+        if (userAuthenticated({ username: loginData.username, password: loginData.password }, usersValue)) {
+            history.push('/dashboard')
+        } else if (userAuthenticated({ username: loginData.username, password: loginData.password }, clientsValue)) {
+            history.push('/atm')
         } else {
-            setFormValidation(previousValidation => ({ ...previousValidation, usernameError: true }))
+            setFormValidation({ usernameError: true, passwordError: true })
         }
     }
 
