@@ -9,11 +9,12 @@ export const UsersProvider = (props) => {
         password: 'Fernando',
         employeeId: 1,
         role: 'user'
-    }
-    ])
+    }])
+
+    const [clients, setClients] = useState(['hola'])
 
     return (
-        <UsersContext.Provider value={[users, setUsers]}>
+        <UsersContext.Provider value={{ users: [users, setUsers], clients: [clients, setClients] }}>
             {props.children}
         </UsersContext.Provider>
     )
