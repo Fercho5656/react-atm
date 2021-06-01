@@ -11,10 +11,11 @@ export const Login = () => {
     const classes = useStyles()
     const history = useHistory()
 
-    const { users, clients } = useContext(UsersContext)
+    const { users, clients, actualUser } = useContext(UsersContext)
 
     const [usersValue] = users
     const [clientsValue] = clients
+    const [setActualUserValue] = actualUser
 
     const [loginData, setLoginData] = useState({
         username: '',
@@ -31,8 +32,10 @@ export const Login = () => {
         //Checks for user/client existence
         if (userAuthenticated({ username: loginData.username, password: loginData.password }, usersValue)) {
             history.push('/dashboard')
+            setActualUserValue({username: loginData.username, role: 'user'})
         } else if (userAuthenticated({ username: loginData.username, password: loginData.password }, clientsValue)) {
             history.push('/atm')
+            setActualUserValue({username: loginData.username, role: 'client'})
         } else {
             setFormValidation({ usernameError: true, passwordError: true })
         }
