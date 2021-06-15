@@ -139,7 +139,7 @@ export const ClientsTable = () => {
                             dataUpdate[rowIdx] = newData
                             setClientsValue([...dataUpdate])
                             resolve()
-                        })
+                        }),
                 }}
             />
         </>
