@@ -15,7 +15,7 @@ export const Login = () => {
 
     const [usersValue] = users
     const [clientsValue] = clients
-    const [setActualUserValue] = actualUser
+    const [actualUserValue, setActualUserValue] = actualUser
 
     const [loginData, setLoginData] = useState({
         username: '',
@@ -31,11 +31,11 @@ export const Login = () => {
         e.preventDefault()
         //Checks for user/client existence
         if (userAuthenticated({ username: loginData.username, password: loginData.password }, usersValue)) {
+            setActualUserValue({ username: loginData.username, role: 'user' })
             history.push('/dashboard')
-            setActualUserValue({username: loginData.username, role: 'user'})
         } else if (userAuthenticated({ username: loginData.username, password: loginData.password }, clientsValue)) {
+            setActualUserValue({ username: loginData.username, role: 'client' })
             history.push('/atm')
-            setActualUserValue({username: loginData.username, role: 'client'})
         } else {
             setFormValidation({ usernameError: true, passwordError: true })
         }
@@ -57,7 +57,7 @@ export const Login = () => {
                     </Avatar>
                     <Typography component='h1' variant='h5'>
                         Sign in
-                </Typography>
+                    </Typography>
                     <form className={classes.form} noValidate>
                         <TextField
                             variant='outlined'
@@ -96,7 +96,7 @@ export const Login = () => {
                             className={classes.submit}
                         >
                             Sign In
-                    </Button>
+                        </Button>
                     </form>
                 </div>
             </Container>
